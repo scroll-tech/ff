@@ -42,19 +42,12 @@ pub trait MulAddAssign<A = Self, B = Self> {
     fn mul_add_assign(&mut self, a: A, b: B);
 }
 
-/// {Self} = {Self} * {rhs} * {rhs} * {rhs} * {rhs}
-pub trait MulAssign4<Rhs = Self> {
-    fn mul_assign4(&mut self, rhs: Rhs);
-}
-
 pub trait ExtraArithmetic:
     Sized
     + MulAddAssign
     + for<'a> MulAddAssign<Self, &'a Self>
     + for<'a> MulAddAssign<&'a Self, Self>
     + for<'a, 'b> MulAddAssign<&'a Self, &'b Self>
-    + MulAssign4
-    + for <'a> MulAssign4<&'a Self>
 {
 }
 
