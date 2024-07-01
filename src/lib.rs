@@ -37,6 +37,14 @@ use subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption};
 #[cfg_attr(docsrs, doc(cfg(feature = "bits")))]
 pub type FieldBits<V> = BitArray<V, Lsb0>;
 
+/// This trait represents {Self} += {A} * {B}.
+pub trait MulAddAssign<A = Self, B = Self>: Sized + AddAssign
+where
+    A: Mul<B, Output = Self>,
+{
+    fn mul_add_assign(&mut self, a: A, b: B);
+}
+
 /// This trait represents an element of a field.
 pub trait Field:
     Sized
@@ -67,6 +75,10 @@ pub trait Field:
     + for<'a> AddAssign<&'a Self>
     + for<'a> SubAssign<&'a Self>
     + for<'a> MulAssign<&'a Self>
+    + MulAddAssign
+    + for<'a> MulAddAssign<Self, &'a Self>
+    + for<'a> MulAddAssign<&'a Self, Self>
+    + for<'a, 'b> MulAddAssign<&'a Self, &'b Self>
 {
     /// The zero element of the field, the additive identity.
     const ZERO: Self;
